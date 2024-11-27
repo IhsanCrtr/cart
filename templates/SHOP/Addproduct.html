@@ -1,0 +1,164 @@
+{% extends "SHOP/shopHome.html" %}
+{% load static %}
+{% block header %}
+<div class="inner-banner">
+    <section class="w3l-breadcrumb">
+        <div class="container">
+            <ul class="breadcrumbs-custom-path">
+                <li><a href="">Home</a></li>
+                <li class="active"><span class="fa fa-chevron-right mx-2" aria-hidden="true"></span>Login</li>
+            </ul>
+        </div>
+    </section>
+</div>
+<!-- contact1 -->
+<section class="w3l-contact-1 py-2" id="contact">
+    <div class="contacts-9 py-lg-5 py-md-2">
+        <div class="container">
+            <div class="d-grid contact-view mb-5 pb-lg-5">
+                <div class="cont-details">
+
+                </div>
+                <div class="map-content-9" class="text-center " style=" margin-left:-250px; width:100%">
+                    <div class="contactct-fm map-content-9 pl-lg-2">
+                        <div class="contactct-fm-text text-left">
+                            <div class="header-title mb-md-5 mt-4">
+                                <!-- <span class="sub-title"></span> -->
+                                <h3 class="hny-title text-left"> Add Product</h3>
+                            </div>
+
+                        </div>
+                        <form method="post" style="max-width:1000px;" enctype="multipart/form-data">
+                            <div class="twice-two text-center">
+                                <input type="text" class="form-control" name="pname" id="w3lName" placeholder="Product Name" required="">
+                                <input type="text" class="form-control" name="Features" id="w3lSender" placeholder="Features" required="">
+                            </div>
+                            <div class="twice-two text-center">
+                                <input type="number" class="form-control" name="price" id="w3lName" placeholder="Price" required="">
+                                <input type="number" class="form-control" name="stock" id="w3lSender" placeholder="Stock" required="">
+                            </div>
+                            <div class="twice-two text-center">
+                                <input type="file" class="form-control" name="file" id="w3lName" placeholder="Email" required="">
+                                <select style="border-radius: 5px;border:none;background: var(--bg-grey);" name="pcategory">
+                                    <option selected disabled> Category</option>
+                                    <?php
+                                    $res = mysqli_query($conn, " SELECT * from `category` ");
+                                    while ($rs = mysqli_fetch_array($res)) {
+                                        echo "<option>" . $rs['1'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" name="register" class="btn btn-primary btn-style mt-4">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+<!-- /contact1 -->
+
+
+<hr>
+
+<!--/blog-post-->
+<section class="w3l-blogpost-content py-5">
+    <div class="container py-md-5">
+        <div class="header-title mb-md-5 mt-4">
+            <span class="sub-title"></span>
+            <h3 class="hny-title text-left">Products</h3>
+        </div>
+        <div class="row">
+            <?php
+            $res = mysqli_query($conn, "SELECT * FROM tb_product WHERE centerid=$uid");
+            while ($rs = mysqli_fetch_array($res)) {
+                $stock = $rs['stocks'];
+                $productcode = $rs['productcode'];
+            ?>
+                <div class="col-lg-4 col-md-6 item">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative">
+                            <a href="blog-single.html">
+                                <img class="card-img-bottom d-block radius-image-full" src="../assets/image/<?php echo $rs['image'] ?>" alt="Card image cap">
+                            </a>
+                        </div>
+                        <div class="card-body blog-details">
+                            <a href="blog-single.html" class="blog-desc"><?php echo $rs['productname'] ?> 💲<?php echo $rs['price'] ?> [ <?php echo $rs['category'] ?> ]
+                            </a>
+                            <div class="author align-items-center">
+                                <img src="" alt="" class="img-fluid rounded-circle">
+                                <ul class="blog-meta">
+                                    <li>
+                                        <a href="#"> <?php echo $stock ?> Product Left </a> <br>
+
+                                        <a href="#"><?php echo $rs['features'] ?></a><br>
+                                    </li><br>
+                                    <li class="meta-item blog-lesson">
+
+                                        <a style="color: white;" class=" btn btn-warning " href="updatestock.php?productid=<?php echo $rs['productcode'] ?>&status=Update">Update Stock</a> <a style="color: white;" class=" btn btn-danger " href="updatestock.php?productid=<?php echo $rs['productcode'] ?>&status=delete">Remove </a> <br>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php
+
+            }
+            ?>
+
+        </div>
+    </div>
+</section>
+
+
+
+<?php
+
+$uid = $_SESSION['uid'];
+if (isset($_REQUEST['register'])) {
+
+    $pname = $_REQUEST['pname'];
+    $Features = $_REQUEST['Features'];
+    $price = $_REQUEST['price'];
+    $pcategory = $_REQUEST['pcategory'];
+    $stock = $_REQUEST['stock'];
+
+    $filename = $_FILES["file"]["name"];
+    $tempname = $_FILES["file"]["tmp_name"];
+    $folder = "image/" . $filename;
+
+    if (move_uploaded_file($tempname, '../assets/image/' . $filename)) {
+        $qryCheck = "SELECT COUNT(*) AS cnt FROM `tb_product` WHERE `productname` = '$pname' OR `price` = '$price'";
+
+        $qryOut = mysqli_query($conn, $qryCheck);
+
+        $fetchData = mysqli_fetch_array($qryOut);
+
+        if ($fetchData['cnt'] > 0) {
+            echo "<script>alert('Already exist ');
+             window.location = 'AddProduct.php';
+            </script>";
+        } else {
+
+            $qryReg = "INSERT INTO tb_product(`centerid`,`productname`,`category`,`brand`,`price`,`warranty`,`features`,`image`,`stocks`)VALUES('$uid','$pname','$pcategory','nobrand','$price','nowarranty','$Features','$filename','$stock')";
+
+            echo $qryReg . "&& ";
+
+            if ($conn->query($qryReg) == TRUE) {
+                echo "<script>alert(' Success');window.location = 'AddProduct.php';</script>";
+            } else {
+                echo "<script>alert(' Failed');window.location = 'AddProduct.php';</script>";
+            }
+        }
+    }
+}
+?>
+
+<?php
+include './COMMON/commonfooter.php';
+?>
+

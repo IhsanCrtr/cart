@@ -1,0 +1,30 @@
+<?php
+session_start();
+include '../CONNECTION/DbConnection.php';
+
+
+$picid = $_REQUEST['picid'];
+$takenBy = $_REQUEST['takenBy'];
+$uid=$_SESSION['uid'];
+
+$query = "INSERT INTO `photobookings`(`from`,`to`,`picid`,`status`,`bookdate`)VALUES('$uid','$takenBy','$picid','Requested',CURDATE()) ";
+$result = mysqli_query($conn, $query);
+
+$stockupdating  = "SELECT * FROM  photographes where photoid='$picid' ";
+$stockresult = mysqli_query($conn, $stockupdating);
+$row=mysqli_fetch_array($stockresult);
+
+$dbstock=$row['stock'];
+echo $dbstock."dbdtock";
+$current_stock=$dbstock-1;
+echo $current_stock."current_stock";
+
+$update_stock="UPDATE `photographes` SET stock='$current_stock' WHERE photoid='$picid'";
+$updated = mysqli_query($conn, $update_stock);
+
+if ($result === TRUE) {
+    echo "<script type = \"text/javascript\">
+					alert(\"Booking Sucessfully Completed\");
+					window.location = (\"viewphotos.php\")
+				</script>";
+}

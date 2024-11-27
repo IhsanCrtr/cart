@@ -1,0 +1,64 @@
+<!-- <?php
+session_start();
+include 'userHeader.php';
+$uid = $_SESSION['uid'];
+include '../CONNECTION/DbConnection.php';
+?> -->
+
+{% extends 'USER/common.html' %}
+{% block header %}
+
+
+<hr>
+
+<!--/blog-post-->
+<section class="w3l-blogpost-content py-5">
+    <div class="container py-md-5">
+        <div class="header-title mb-md-5 mt-4">
+            <span class="sub-title"></span>
+            <h3 class="hny-title text-left">Products</h3>
+        </div>
+        <div class="row">
+            <!-- <?php
+            $res = mysqli_query($conn, "SELECT `tb_product`.*,shop.* FROM `tb_product`,`shop` WHERE `tb_product`.`centerid`=shop.`s_id`");
+            while ($rs = mysqli_fetch_array($res)) {
+                $cid= $rs['centerid'];
+            ?> -->
+                <div class="col-lg-4 col-md-6 item">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative">
+                            <a href="blog-single.html">
+                                <img class="card-img-bottom d-block radius-image-full" src="../assets/image/<?php echo $rs['image'] ?>" alt="Card image cap">
+                            </a>
+                        </div>
+                        <div class="card-body blog-details">
+                            <a href="blog-single.html" class="blog-desc"><?php echo $rs['productname'] ?>💲<?php echo $rs['price'] ?> <br><br>
+                            <span style="background-color: pink; padding:10px;border-radius:100%;"><?php echo $rs['stocks'] ?> </span>
+                            </a>
+                            <div class="author align-items-center">
+                                <img src="" alt="" class="img-fluid rounded-circle">
+                                <ul class="blog-meta">
+                                    <li>
+                                        <a href="#">📞<?php echo $rs['sphone'] ?></a> <br>
+                                        <a href="#">✉️<?php echo $rs['semail'] ?></a>
+                                    </li>
+                                    <li class="meta-item blog-lesson">
+                                        <span class="meta-value"> </span><?php echo $rs['saddress'] ?> <span class="meta-value ml-2"> </span><br><br>
+                                        <a style="color: white;" class=" btn btn-warning "href='AddtoCartProcess.php?pid=<?php echo $rs['productcode']?>&cusid=<?php echo $uid ?>&centerid=<?php echo $cid?>&item=<?php echo $rs['productname']?>'>Add To Cart</a>  <br>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- <?php
+
+            }
+            ?> -->
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

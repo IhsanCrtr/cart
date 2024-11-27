@@ -1,0 +1,113 @@
+
+
+
+<!-- contact1 -->
+<section class="w3l-contact-1 py-2" id="contact">
+    <div class="contacts-9 py-lg-5 py-md-2">
+        <div class="container">
+            <div class="d-grid contact-view mb-5 pb-lg-5">
+                <div class="cont-details">
+
+                </div>
+                <div class="map-content-9" class="text-center " style=" margin-left:-250px; width:100%">
+                    <div class="contactct-fm map-content-9 pl-lg-2">
+                        <div class="contactct-fm-text text-left">
+                            <div class="header-title mb-md-5 mt-4">
+                                <!-- <span class="sub-title"></span> -->
+                                <h3 class="hny-title text-left">Category</h3>
+                            </div>
+
+                        </div>
+                        <form method="post" style="max-width:1000px;">
+                            <div class="twice-two text-center">
+                                <input type="text" class="form-control" name="category" id="w3lName" placeholder="Category Name" required="">
+                                <!-- <input type="password" class="form-control" name="Password" id="w3lSender" placeholder="Password" required=""> -->
+                            </div>
+                            <!-- <div class="twice">
+                                <input type="text" class="form-control" name="w3lSubject" id="w3lSubject" placeholder="Subject" required="">
+                            </div>
+                            <textarea name="w3lMessage" class="form-control" id="w3lMessage" placeholder="Message" required=""></textarea> -->
+                            <div class="text-center">
+                                <button type="submit" name="login" class="btn btn-primary btn-style mt-4">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+<!-- /contact1 -->
+
+<hr>
+
+
+<div class="containerx">
+    <div class="table-divx">
+        <?php
+
+        $qry = "SELECT * FROM category";
+        $result = mysqli_query($conn, $qry);
+        if ($result->num_rows > 0) {
+        ?>
+            <div style="margin-bottom: 100px;" class="container">
+                <table id="customers">
+                    <tr>
+                  
+                        <th>Category</th>
+
+                    </tr>
+
+                <?php
+                while ($row = mysqli_fetch_array($result)) {
+
+
+                    echo "
+            <tr>
+            
+                <td>" . $row['catname'] . "</td>
+            </tr>
+            </div><br>";
+                }
+            } else {
+                echo "<div class='no-data-div'><img  style='width:350px; margin:0px auto;' src='../assets/images/no_data.png'><p> No Category Added</p></div>";
+            }
+                ?>
+                </table>
+            </div>
+    </div>
+
+
+
+    <?php
+    include '../COMMON/commonfooter.php';
+
+
+
+    if (isset($_REQUEST['login'])) {
+        $Category = $_REQUEST['category'];
+
+        $qryCheck = "SELECT COUNT(*) AS cnt FROM category WHERE `catname`='$Category'";
+
+        $qryOut = mysqli_query($conn, $qryCheck);
+
+        $fetchData = mysqli_fetch_array($qryOut);
+
+        if ($fetchData['cnt'] > 0) {
+            echo "<script>alert('Already exist ');window.location = 'AddCategory.php';</script>";
+        } else {
+
+            $qryReg = "INSERT INTO category (`catname`)VALUES('$Category')";
+
+
+            echo $qryReg . "&& " . $qryLog;
+
+            if ($conn->query($qryReg) == TRUE) {
+                echo "<script>alert(' Success');window.location = 'AddCategory.php';</script>";
+            } else {
+                echo "<script>alert(' Failed');window.location = 'AddCategory.php';</script>";
+            }
+        }
+    }
+
+
+    ?>

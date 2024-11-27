@@ -1,0 +1,115 @@
+<!-- <?php
+session_start();
+include '../CONNECTION/DbConnection.php';
+include './userHeader.php';
+
+$uid = $_SESSION['uid'];
+
+?> -->
+
+{% extends 'USER/common.html' %}
+{% block header %}
+{% load static %}
+
+<style>
+    #qty {
+        padding: 6px;
+        width: 80px;
+        margin: 5px;
+        outline: none;
+        border: 1px solid grey;
+        border-radius: 5px;
+    }
+
+    input[type="submit"] {
+        border: none;
+        background-color: white;
+        color: green;
+        font-weight: bolder;
+    }
+</style>
+
+
+
+<!--/blog-post-->
+<section class="w3l-blogpost-content py-5">
+    <div class="container py-md-5">
+        <div class="header-title mb-md-5 mt-4">
+            <span class="sub-title"></span>
+            <h3 class="hny-title text-left">My Cart</h3>
+        </div>
+        <div class="row">
+            <?php
+            $res = mysqli_query($conn, "SELECT * FROM `tb_cart` C , `tb_product` P,`shop` S WHERE C.`cusid`='$uid' AND C.`centerid`=S.`s_id` AND C.`itemid`= P.`productcode` AND C.`status`='incart'");
+            while ($rs = mysqli_fetch_array($res)) {
+                $cid = $rs['centerid'];
+                $centerid = $rs['s_id'];
+                $stock = $rs['stocks'];
+                $carttid = $rs['cart_id'];
+                $product_id = $rs['productcode'];
+
+            ?>
+                <div class="col-lg-4 col-md-6 item">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative">
+                            <a href="blog-single.html">
+                                <img class="card-img-bottom d-block radius-image-full" src="../assets/image/<?php echo $rs['image'] ?>" alt="Card image cap">
+                            </a>
+                        </div>
+                        <div class="card-body blog-details">
+                            <a href="blog-single.html" class="blog-desc"><?php echo $rs['productname'] ?>💲<?php echo $rs['price'] ?> <br><br>
+                                <span style="background-color: pink; padding:10px;border-radius:100%;"><?php echo $rs['stocks'] ?> </span>Products Available<br><br>
+                                <span><?php echo $rs['features'] ?> </span>
+                                <li>
+
+                            </a>
+                            <div class="author align-items-center">
+                                <img src="" alt="" class="img-fluid rounded-circle">
+                                <ul class="blog-meta">
+                                    <li>
+                                        <a href="#">📞<?php echo $rs['sphone'] ?></a> <br>
+                                        <a href="#">✉️<?php echo $rs['semail'] ?></a>
+                                    </li>
+                                    <li class="meta-item blog-lesson">
+                                        <span class="meta-value"> </span><?php echo $rs['saddress'] ?> <span class="meta-value ml-2"> </span><br><br>
+                                    </li>
+                                    <hr>
+                                </ul>
+                                <form action="../Payment/First.php">
+                                    <input id="qty" type="number" max=<?php echo $stock; ?> placeholder="Stock" min=0 required name="neededstock">
+                                    <br>
+                                    <!-- <?php
+                                    if ($stock == 0) {
+                                        echo "<p style='color:red; display:inline-block;'>Out of Stock</p>";
+                                    } else {
+                                    ?>
+                                        <input type="submit" value="Pay" class="btn btn-warning" >
+                                        <input type="hidden" name="carttid" value="<?php echo $carttid ?>">
+                                        <input type="hidden" name="product_id" value="<?php echo $product_id ?>">
+                                        <input type="hidden" name="stock" value="<?php echo $stock ?>">
+
+                                    <?php
+
+                                    }
+                                    ?> -->
+                                    <a class="btn btn-danger" href="RemoveFromCart.php?cartid=<?php echo $rs['cart_id'] ?>" class=".text-center" style="color:white;margin-left:200px;">Remove </a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- <?php
+
+            }
+            ?> -->
+
+        </div>
+    </div>
+</section>
+
+
+<!-- <?php
+include '../COMMON/commonfooter.php';
+?> -->
+
+{% endblock %}

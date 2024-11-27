@@ -1,0 +1,59 @@
+<?php
+include 'adminheader.php';
+include '../CONNECTION/DbConnection.php';
+?>
+
+
+<!--/blog-post-->
+<section class="w3l-blogpost-content py-5">
+    <div class="container py-md-5">
+        <div class="header-title mb-md-5 mt-4">
+            <span class="sub-title"></span>
+            <h3 class="hny-title text-left">Feedbacks</h3>
+        </div>
+        <div class="row">
+            <?php
+            $res = mysqli_query($conn, "SELECT user.*,feedback.* FROM USER,feedback WHERE feedback.`user_id`=user.`uid`");
+            while ($rs = mysqli_fetch_array($res)) {
+            ?>
+                <div class="col-lg-4 col-md-6 item">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative">
+                            <a href="blog-single.html">
+                                <img class="card-img-bottom d-block radius-image-full" src="../assets/images/feedback.jpg" alt="Card image cap">
+                            </a>
+                        </div>
+                        <div class="card-body blog-details">
+                            <a href="blog-single.html" class="blog-desc"><?php echo $rs['uname'] ?>
+                            </a>
+                            <div class="author align-items-center">
+                                <img src="" alt="" class="img-fluid rounded-circle">
+                                <ul class="blog-meta">
+                                    <li>
+                                        <a href="#">📞<?php echo $rs['uphoneno'] ?></a> <br>
+                                        <a href="#">✉️<?php echo $rs['uemail'] ?></a>
+                                    </li><hr>
+                                    <li class="meta-item blog-lesson">
+                                        <span class="meta-value"> </span><?php echo $rs['subject'] ?> <span class="meta-value ml-2"> </span><br>
+                                        <span class="meta-value"> </span><?php echo $rs['description'] ?> <span class="meta-value ml-2"> </span><br>
+                                        <!-- <a style="color: white;" class=" btn btn-success " href="StatusAction.php?sid=<?php echo $rs['reg_id'] ?>&status=Approved">Approve</a> <a style="color: white;" class=" btn btn-danger " href="StatusAction.phpsid=<?php echo $rs['reg_id'] ?>&status=Rejected">Reject </a> <br> -->
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php
+
+            }
+            ?>
+
+        </div>
+    </div>
+</section>
+
+
+<?php
+include '../COMMON/commonfooter.php';
+?>

@@ -1,0 +1,81 @@
+<?php
+session_start();
+$uid = $_SESSION['uid'];
+include 'shopHeader.php';
+include '../CONNECTION/DbConnection.php';
+?>
+
+
+<!--/blog-post-->
+<section class="w3l-blogpost-content py-5">
+    <div class="container py-md-5">
+        <div class="header-title mb-md-5 mt-4">
+            <span class="sub-title"></span>
+            <h3 class="hny-title text-left">Bookings</h3>
+        </div>
+        <div class="row">
+            <?php
+            $res = mysqli_query($conn, "SELECT * FROM `tb_cart` C , `tb_product` P,`shop` S,`user` u WHERE C.`centerid`='$uid' AND C.`centerid`=S.`s_id` AND C.`itemid`= P.`productcode` AND c.`cusid`=u.`uid`AND  C.`status`='Paid' AND c.`usertype`='USER'");
+            while ($rs = mysqli_fetch_array($res)) {
+                $cid = $rs['centerid'];
+                $centerid = $rs['s_id'];
+                $stock = $rs['stocks'];
+                $carttid = $rs['cart_id'];
+                $product_id = $rs['productcode'];
+
+            ?>
+                <div class="col-lg-4 col-md-6 item">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative">
+                            <a href="blog-single.html">
+                                <p style="margin: 10px;"><?php echo $rs['date'] ?></p>
+                                <img class="card-img-bottom d-block radius-image-full" src="../assets/image/<?php echo $rs['image'] ?>" alt="Card image cap">
+                            </a>
+                        </div>
+                        <div class="card-body blog-details">
+                            <a href="blog-single.html" class="blog-desc"><?php echo $rs['productname'] ?>💲<?php echo $rs['price'] ?> <br><br>
+                                <!-- <span style="background-color: pink; padding:10px;border-radius:100%;"><?php echo $rs['stocks'] ?> </span>Products Available<br><br> -->
+                                <span><?php echo $rs['features'] ?> </span>
+                                <li>
+
+                            </a>
+                            <div class="author align-items-center">
+                                <img src="" alt="" class="img-fluid rounded-circle">
+                                <ul class="blog-meta">
+                                    <li>
+                                        <a href="#">👤<?php echo $rs['uname'] ?></a> <br>
+                                        <a href="#">📞<?php echo $rs['uphoneno'] ?></a> <br>
+                                        <a href="#">✉️<?php echo $rs['uemail'] ?></a>
+                                    </li>
+                                    <li class="meta-item blog-lesson">
+                                        <span class="meta-value"> </span><?php echo $rs['uaddress'] ?> <span class="meta-value ml-2"> </span><br><br>
+                                    </li>
+                                    <li>
+                                        <a style="color: green; letter-spacing:2px;" href="#"><?php echo $rs['status'] ?></a> <br>
+                                        
+                                    </li>
+                                    <hr>
+                                </ul>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php
+
+            }
+            ?>
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+<?php
+include '../COMMON/commonfooter.php';
+?>
+
